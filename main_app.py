@@ -163,14 +163,14 @@ else:
                         start = st.slider('势力值起始',
                                           min_value=0,
                                           max_value=40000,
-                                          value=(l*10000,40000),
+                                          value=(l*15000,40000),
                                           step=1000,
                                           key=str(l))
                     else:
                         start = st.slider('势力值起始',
                                           min_value=0,
                                           max_value=40000,
-                                          value=(l*10000,(l+1)*10000),
+                                          value=(l*15000,(l+1)*10000),
                                           step=1000,
                                           key=str(l))
                     start_list.append(start)
