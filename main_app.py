@@ -3,6 +3,10 @@ import pandas as pd
 import numpy as np
 import warnings
 warnings.filterwarnings('ignore')
+from pyecharts.charts import Pie, Bar
+from streamlit_echarts import st_pyecharts
+from pyecharts import options as opts
+import plotly.express as px
 
 st.set_page_config(page_title='揽星辰', page_icon=None, layout="wide",
                    initial_sidebar_state="auto", menu_items=None)
@@ -135,6 +139,46 @@ else:
     else:
         st.warning('请上传文件')
         st.stop()
+    st.subheader('当前战功及势力情况(不含小号及未分组)')
+    test = df[['分组','成员','战功总量','战功本周','势力值']]
+    test['分组'] = test['分组'].str.strip(' ')
+    test = test[test['分组'].isin(['小号','未分组']) == False]
+    test['全盟'] = '全盟'
+    group = test.groupby('分组')['战功本周','战功总量','势力值'].mean().reset_index().round(0)
+    group1 = test.groupby('全盟')['战功本周','战功总量','势力值'].mean().reset_index().round(0).rename(columns={'全盟':'分组'})
+    group = pd.concat([group,group1])
+
+
+    g = (
+        Bar()
+        .add_xaxis(group['分组'].values.tolist())
+
+        .add_yaxis("战功本周", group['战功本周'].values.tolist())
+        .add_yaxis("战功总量", group['战功总量'].values.tolist())
+        .add_yaxis("势力值", group['势力值'].values.tolist())
+
+        .set_global_opts(
+
+            title_opts=opts.TitleOpts(title="战功势力对比(平均)"),
+            legend_opts=opts.LegendOpts(selected_map={"战功总量": False}),
+        )
+    )
+    col1, col2 = st.columns([1,1])
+    with col1:
+        st_pyecharts(g, height = 600)
+
+    with col2:
+        func = st.selectbox('功能选择', ['战功总量','势力值','战功本周'])
+        hg = px.histogram(test, x=func, nbins=20,height=500, title='总战功分布',
+                          color="分组")
+        st.plotly_chart(hg,use_container_width=True)
+
+
+
+
+
+
+
     with st.expander('周战功考核',expanded=True):
         use_multi = st.checkbox('是否使用战功 = 势力 * 倍数', value=False)
         if use_multi:
@@ -155,7 +199,7 @@ else:
             start_list = []
             war_num_list = []
             for l in range(int(level)):
-                col1, col2, col3 = st.columns([1,1,1])
+                col1, col2= st.columns([1,1])
 
 
                 with col1:
@@ -198,9 +242,7 @@ else:
             temp2 = temp2[temp2['分组']==team_select]
         col0, col1, col2 = st.columns(3)
         with col0:
-            from pyecharts.charts import Pie
-            from streamlit_echarts import st_pyecharts
-            from pyecharts import options as opts
+
             c = (
                     Pie()
                     .add(
