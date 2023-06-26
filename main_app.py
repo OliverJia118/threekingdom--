@@ -41,7 +41,7 @@ with col2:
     else:
         st.stop()
 
-name1 = pd.to_datetime(fileup1.name[4:].strip('.csv').replace('年','/').
+name1 = pd.to_datetime(fileup1.name[4:].strip('.csv').replace('年','/').replace('(1)','/').
                        replace('月','/').replace('日',' ').replace('时',':').replace('分',':').replace('秒',''))
 name2 = pd.to_datetime(fileup2.name[4:].strip('.csv').replace('年','/').
                        replace('月','/').replace('日',' ').replace('时',':').replace('分',':').replace('秒',''))
