@@ -144,8 +144,8 @@ else:
     test['分组'] = test['分组'].str.strip(' ')
     test = test[test['分组'].isin(['小号','未分组']) == False]
     test['全盟'] = '全盟'
-    group = test.groupby('分组')['战功本周','战功总量','势力值'].mean().reset_index().round(0)
-    group1 = test.groupby('全盟')['战功本周','战功总量','势力值'].mean().reset_index().round(0).rename(columns={'全盟':'分组'})
+    group = test.groupby(['分组'])['战功本周','战功总量','势力值'].mean().reset_index().round(0)
+    group1 = test.groupby(['全盟'])['战功本周','战功总量','势力值'].mean().reset_index().round(0).rename(columns={'全盟':'分组'})
     group = pd.concat([group,group1])
 
 
