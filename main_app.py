@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import warnings
 warnings.filterwarnings('ignore')
-from pyecharts.charts import Pie, Bar
+from pyecharts.charts import Pie, Bar, Line
 from streamlit_echarts import st_pyecharts
 from pyecharts import options as opts
 import plotly.express as px
@@ -147,7 +147,7 @@ else:
     group = test.groupby(['分组'])[['战功本周','战功总量','势力值']].mean().reset_index().round(0)
     group1 = test.groupby(['全盟'])[['战功本周','战功总量','势力值']].mean().reset_index().round(0).rename(columns={'全盟':'分组'})
     group = pd.concat([group,group1])
-
+    group['总战功/势力比'] = round(group['战功总量']/group['势力值'], 1)
 
     g = (
         Bar()
@@ -156,13 +156,38 @@ else:
         .add_yaxis("战功本周", group['战功本周'].values.tolist())
         .add_yaxis("战功总量", group['战功总量'].values.tolist())
         .add_yaxis("势力值", group['势力值'].values.tolist())
-
+        .extend_axis(
+            yaxis=opts.AxisOpts(
+                name="总战功/势力比",
+                type_="value",
+                axislabel_opts=opts.LabelOpts(formatter="{value}%"))
+        )
         .set_global_opts(
-
+            tooltip_opts=opts.TooltipOpts(
+                is_show=True, trigger="axis", axis_pointer_type="cross"
+            ),
+            yaxis_opts=opts.AxisOpts(
+                axispointer_opts=opts.AxisPointerOpts(is_show=True, type_="shadow"),
+            ),
+            xaxis_opts=opts.AxisOpts(
+                axispointer_opts=opts.AxisPointerOpts(is_show=True, type_="shadow"),
+            ),
             title_opts=opts.TitleOpts(title="战功势力对比(平均)"),
             legend_opts=opts.LegendOpts(selected_map={"战功总量": False}),
         )
     )
+    line = (
+        Line()
+        .add_xaxis(xaxis_data=group['分组'].values.tolist())
+        .add_yaxis(
+            series_name="总战功/势力比",
+            yaxis_index=1,
+            y_axis=group['总战功/势力比'].values.tolist(),
+            label_opts=opts.LabelOpts(is_show=True),
+        )
+    )
+
+    g.overlap(line).render("mixed_bar_and_line.html")
     col1, col2 = st.columns([1,1])
     with col1:
         st_pyecharts(g, height = 600)
@@ -244,45 +269,45 @@ else:
         with col0:
 
             c = (
-                    Pie()
-                    .add(
-                        "",
-                        [list(z) for z in zip(['合格','不合格'], [len(temp1), len(temp2)])],
-                        radius=["20%", "55%"],
-                        center=["50%", "50%"],
-                        label_opts=opts.LabelOpts(
-                            position="outside",
-                            formatter="{b|{b}: }{c}  {per|{d}%}  ",
-                            background_color="#eee",
-                            border_color="#aaa",
-                            border_width=1,
-                            border_radius=4,
-                            rich={
-                                "a": {"color": "#999", "lineHeight": 22, "align": "center"},
-                                "abg": {
-                                    "backgroundColor": "#e3e3e3",
-                                    "width": "100%",
-                                    "align": "right",
-                                    "height": 22,
-                                    "borderRadius": [4, 4, 0, 0],
-                                },
-                                "hr": {
-                                    "borderColor": "#aaa",
-                                    "width": "100%",
-                                    "borderWidth": 0.5,
-                                    "height": 0,
-                                },
-                                "b": {"fontSize": 16, "lineHeight": 33},
-                                "per": {
-                                    "color": "#eee",
-                                    "backgroundColor": "#334455",
-                                    "padding": [2, 4],
-                                    "borderRadius": 2,
-                                },
+                Pie()
+                .add(
+                    "",
+                    [list(z) for z in zip(['合格','不合格'], [len(temp1), len(temp2)])],
+                    radius=["20%", "55%"],
+                    center=["50%", "50%"],
+                    label_opts=opts.LabelOpts(
+                        position="outside",
+                        formatter="{b|{b}: }{c}  {per|{d}%}  ",
+                        background_color="#eee",
+                        border_color="#aaa",
+                        border_width=1,
+                        border_radius=4,
+                        rich={
+                            "a": {"color": "#999", "lineHeight": 22, "align": "center"},
+                            "abg": {
+                                "backgroundColor": "#e3e3e3",
+                                "width": "100%",
+                                "align": "right",
+                                "height": 22,
+                                "borderRadius": [4, 4, 0, 0],
                             },
-                        ),
-                    ).set_colors(["steelblue","lightpink"])
-                    .set_global_opts(title_opts=opts.TitleOpts(title=str(team_select)))
+                            "hr": {
+                                "borderColor": "#aaa",
+                                "width": "100%",
+                                "borderWidth": 0.5,
+                                "height": 0,
+                            },
+                            "b": {"fontSize": 16, "lineHeight": 33},
+                            "per": {
+                                "color": "#eee",
+                                "backgroundColor": "#334455",
+                                "padding": [2, 4],
+                                "borderRadius": 2,
+                            },
+                        },
+                    ),
+                ).set_colors(["steelblue","lightpink"])
+                .set_global_opts(title_opts=opts.TitleOpts(title=str(team_select)))
             )
             st_pyecharts(c,
                          height=500)
@@ -314,12 +339,12 @@ else:
 
 
                 temp = df[(df['势力值'] >= start_list[l][0]) &
-                       (df['势力值'] < start_list[l][1]) &
-                       (df['战功本周'] < war_num_list[l])].set_index('成员').sort_values('战功本周', ascending=True)
+                          (df['势力值'] < start_list[l][1]) &
+                          (df['战功本周'] < war_num_list[l])].set_index('成员').sort_values('战功本周', ascending=True)
 
                 temp_hg = df[(df['势力值'] >= start_list[l][0]) &
-                          (df['势力值'] < start_list[l][1]) &
-                          (df['战功本周'] >= war_num_list[l])].set_index('成员').sort_values('战功本周', ascending=True)
+                             (df['势力值'] < start_list[l][1]) &
+                             (df['战功本周'] >= war_num_list[l])].set_index('成员').sort_values('战功本周', ascending=True)
 
                 if team_select == '全盟':
                     temp1 = temp
@@ -336,8 +361,8 @@ else:
                                    (df['势力值'] >= start_list[l][0]) &
                                    (df['势力值'] < start_list[l][1])])
                 st.subheader(
-                             '势力值 '+ str(start_list[l][0]) + ' 到 ' + str(start_list[l][1])
-                             + '总计' + str(count) + '人')
+                    '势力值 '+ str(start_list[l][0]) + ' 到 ' + str(start_list[l][1])
+                    + '总计' + str(count) + '人')
                 st.subheader('不合格 ' + str(len(temp1)) + '人 - 战功低于 ' + str(war_num_list[l]) )
                 if temp1.empty:
                     st.caption('无不合格人员')
@@ -349,7 +374,6 @@ else:
                     pass
                 else:
                     st.dataframe(temp2, use_container_width=True)
-
 
 
 
