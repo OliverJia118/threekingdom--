@@ -83,17 +83,20 @@ res = res[res['分组'].isin(team_select)]
 for i in team_select:
     st.subheader(i)
     temp = res[res['分组']==i]
-    col1, col2 = st.columns([1,1])
-    with col1:
-        st.caption('战功变化')
-
-        temp['战功变化'] = temp['战功总量-后'] - temp['战功总量']
-        war = temp[['成员','分组','战功总量','战功总量-后','战功变化']]
-        war = war.sort_values('战功变化', ascending=False)
-        st.dataframe(war, use_container_width=True)
-    with col2:
-        st.caption('势力值变化')
-        temp['势力值变化'] = temp['势力值-后'] - temp['势力值']
-        land = temp[['成员','分组','势力值','势力值-后','势力值变化']]
-        land = land.sort_values('势力值变化', ascending=False)
-        st.dataframe(land, use_container_width=True)
+    if temp.empty:
+        st.write('无分组'+str(i)+ '数据')
+    else:
+        col1, col2 = st.columns([1,1])
+        with col1:
+            st.caption('战功变化')
+    
+            temp['战功变化'] = temp['战功总量-后'] - temp['战功总量']
+            war = temp[['成员','分组','战功总量','战功总量-后','战功变化']]
+            war = war.sort_values('战功变化', ascending=False)
+            st.dataframe(war, use_container_width=True)
+        with col2:
+            st.caption('势力值变化')
+            temp['势力值变化'] = temp['势力值-后'] - temp['势力值']
+            land = temp[['成员','分组','势力值','势力值-后','势力值变化']]
+            land = land.sort_values('势力值变化', ascending=False)
+            st.dataframe(land, use_container_width=True)
