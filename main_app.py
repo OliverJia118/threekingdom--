@@ -282,7 +282,7 @@ else:
                 if team_select == '全盟':
                     temp1 = temp
                     temp2 = temp_hg
-                    count = len(df)
+                    count = len(df[(df['势力值'] >= start_list[l][0]) & (df['势力值'] < start_list[l][1])])
                 else:
                     temp1 = temp[temp['分组']==team_select]
                     temp2 = temp_hg[temp_hg['分组']==team_select]
