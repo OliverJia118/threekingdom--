@@ -108,13 +108,13 @@ for i in team_select:
             temp['战功变化'] = temp['战功总量-后'] - temp['战功总量']
             war = temp[['成员','分组','战功总量','战功总量-后','战功变化']]
             war = war.sort_values('战功变化', ascending=False)
-            st.dataframe(war, use_container_width=True)
+            st.dataframe(war.set_index('成员'), use_container_width=True)
         with col2:
             st.caption('势力值变化')
             temp['势力值变化'] = temp['势力值-后'] - temp['势力值']
             land = temp[['成员','分组','势力值','势力值-后','势力值变化']]
             land = land.sort_values('势力值变化', ascending=False)
-            st.dataframe(land, use_container_width=True)
+            st.dataframe(land.set_index('成员'), use_container_width=True)
 
 
 
