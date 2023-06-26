@@ -1,1 +1,3 @@
 pyecharts
+streamlit-echarts
+streamlit_echarts
