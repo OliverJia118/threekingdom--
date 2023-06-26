@@ -9,15 +9,18 @@ st.set_page_config(page_title='揽星辰', page_icon=None, layout="wide",
 
 
 password = st.sidebar.text_input('请输入密码', type='password')
-if password != 'lxc' and password != '':
-    st.error('密码错误')
-    st.stop()
+if password == 'lxc':
+    name = '揽星辰'
+elif password == 'gch':
+    name = '观沧海'
+elif password == 'ljt':
+    name = '落九天'
 elif password == '':
     st.warning('请输入密码')
     st.stop()
 else:
-    pass
-
+    st.error('密码错误')
+    st.stop()
 
 
 
