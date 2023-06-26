@@ -206,7 +206,7 @@ else:
                     .add(
                         "",
                         [list(z) for z in zip(['合格','不合格'], [len(temp1), len(temp2)])],
-                        radius=["20%", "70%"],
+                        radius=["20%", "55%"],
                         center=["50%", "50%"],
                         label_opts=opts.LabelOpts(
                             position="outside",
@@ -296,9 +296,9 @@ else:
                 st.subheader(
                              '势力值 '+ str(start_list[l][0]) + ' 到 ' + str(start_list[l][1])
                              + '总计' + str(count) + '人')
-                st.subheader('不合格 ' + str(len(temp1)) + '人')
+                st.subheader('不合格 ' + str(len(temp1)) + '人 - 战功低于 ' + str(war_num_list[l]) )
                 if temp1.empty:
-                    pass
+                    st.caption('无不合格人员')
                 else:
                     st.dataframe(temp1, use_container_width=True)
 
