@@ -41,11 +41,11 @@ with col2:
     else:
         st.stop()
 
-name1 = pd.to_datetime(fileup1.name[4:].strip('.csv').replace('年','/').replace('(1)','/').replace('(2)','/').
-                       replace('(3)','/').replace('(4)','/').replace('(5)','/').replace('(6)','/').
+name1 = pd.to_datetime(fileup1.name[4:].strip('.csv').replace('年','/').replace('(1)','').replace('(2)','').
+                       replace('(3)','').replace('(4)','').replace('(5)','').replace('(6)','').
                        replace('月','/').replace('日',' ').replace('时',':').replace('分',':').replace('秒',''))
-name2 = pd.to_datetime(fileup2.name[4:].strip('.csv').replace('年','/').replace('(1)','/').replace('(2)','/').
-                       replace('(3)','/').replace('(4)','/').replace('(5)','/').replace('(6)','/').
+name2 = pd.to_datetime(fileup2.name[4:].strip('.csv').replace('年','/').replace('(1)','').replace('(2)','').
+                       replace('(3)','').replace('(4)','').replace('(5)','').replace('(6)','').
                        replace('月','/').replace('日',' ').replace('时',':').replace('分',':').replace('秒',''))
 
 if name1 > name2:
