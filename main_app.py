@@ -87,14 +87,16 @@ with col2:
 
     st.dataframe(join, use_container_width=True)
 
-res['分组'] = res['分组'].str.strip(' ')
+
+res['分组-后'] = res['分组-后'].str.strip(' ')
 st.header('数据变化')
 res = res.dropna()
 st.caption('战功变化共计'+ str(len(res)) +'人')
-team_list = ['破晓','点杀','烟雨','穿雲','风华','背嵬','未分组']
+team_list = res['分组-后'].drop_duplicates().values.tolist()
 col1, col2 = st.columns([1,2])
 with col1:
     team_select = st.multiselect('选择分组', team_list, team_list)
+
 
 res = res[res['分组'].isin(team_select)]
 for i in team_select:
