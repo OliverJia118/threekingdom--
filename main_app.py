@@ -24,7 +24,7 @@ else:
 
 
 
-st.header('揽星辰同盟考勤管理')
+st.header(str(name) +'同盟考勤管理')
 
 col1, col2 = st.columns(2)
 with col1:
@@ -90,7 +90,6 @@ with col2:
 
     st.dataframe(join, use_container_width=True)
 
-
 res['分组-后'] = res['分组-后'].str.strip(' ')
 st.header('数据变化')
 res = res.dropna()
@@ -101,10 +100,11 @@ with col1:
     team_select = st.multiselect('选择分组', team_list, team_list)
 
 
-res = res[res['分组'].isin(team_select)]
+
+res = res[res['分组-后'].isin(team_select)]
 for i in team_select:
     st.subheader(i)
-    temp = res[res['分组']==i]
+    temp = res[res['分组-后']==i]
     if temp.empty:
         st.write('无分组'+str(i)+ '数据')
     else:
@@ -122,10 +122,6 @@ for i in team_select:
             land = temp[['成员','分组','势力值','势力值-后','势力值变化']]
             land = land.sort_values('势力值变化', ascending=False)
             st.dataframe(land.set_index('成员'), use_container_width=True)
-
-
-
-
 
 
 
