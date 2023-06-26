@@ -17,28 +17,43 @@ elif password == '':
     st.stop()
 else:
     pass
+
+
+
+
 st.header('揽星辰同盟考勤管理')
 
 col1, col2 = st.columns(2)
 with col1:
-    time1 = st.time_input('选择活动前时间')
     fileup1 = st.file_uploader('上传同盟文件')
     if fileup1 is not None:
+
         df1 = pd.read_csv(fileup1)
         df1.columns = df1.columns.str.strip(' ')
-        st.write(df1)
     else:
         st.warning('请上传文件')
 
 with col2:
-    time2 = st.time_input('选择活动后时间')
     fileup2 = st.file_uploader('上传同盟文件2')
     if fileup2 is not None:
         df2 = pd.read_csv(fileup2)
         df2.columns = df2.columns.str.strip(' ')
-        st.write(df2)
     else:
         st.stop()
+
+name1 = pd.to_datetime(fileup1.name[4:].strip('.csv').replace('年','/').
+                       replace('月','/').replace('日',' ').replace('时',':').replace('分',':').replace('秒',''))
+name2 = pd.to_datetime(fileup2.name[4:].strip('.csv').replace('年','/').
+                       replace('月','/').replace('日',' ').replace('时',':').replace('分',':').replace('秒',''))
+
+if name1 > name2:
+    df1, df2 = df2, df1
+    name1, name2 = name2, name1
+else:
+    pass
+
+st.write('对比时间： ', name1 , ' vs ', name2)
+st.write('时间相差：',name2 - name1  )
 
 df1 = df1[['成员','分组','战功本周','战功总量','势力值']]
 
@@ -71,7 +86,7 @@ with col2:
     st.dataframe(join, use_container_width=True)
 
 res['分组'] = res['分组'].str.strip(' ')
-st.header('战功变化')
+st.header('数据变化')
 res = res.dropna()
 st.caption('战功变化共计'+ str(len(res)) +'人')
 team_list = ['破晓','点杀','烟雨','穿雲','风华','背嵬','未分组']
@@ -89,7 +104,7 @@ for i in team_select:
         col1, col2 = st.columns([1,1])
         with col1:
             st.caption('战功变化')
-    
+
             temp['战功变化'] = temp['战功总量-后'] - temp['战功总量']
             war = temp[['成员','分组','战功总量','战功总量-后','战功变化']]
             war = war.sort_values('战功变化', ascending=False)
@@ -100,3 +115,13 @@ for i in team_select:
             land = temp[['成员','分组','势力值','势力值-后','势力值变化']]
             land = land.sort_values('势力值变化', ascending=False)
             st.dataframe(land, use_container_width=True)
+
+
+
+
+
+
+
+
+
+
