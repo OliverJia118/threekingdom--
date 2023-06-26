@@ -7,6 +7,16 @@ warnings.filterwarnings('ignore')
 st.set_page_config(page_title='揽星辰', page_icon=None, layout="wide",
                    initial_sidebar_state="auto", menu_items=None)
 
+
+password = st.sidebar.text_input('请输入密码', type='password')
+if password != 'lxc' and password != '':
+    st.error('密码错误')
+    st.stop()
+elif password == '':
+    st.warning('请输入密码')
+    st.stop()
+else:
+    pass
 st.header('揽星辰同盟考勤管理')
 
 col1, col2 = st.columns(2)
