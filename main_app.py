@@ -8,7 +8,7 @@ from streamlit_echarts import st_pyecharts
 from pyecharts import options as opts
 import plotly.express as px
 
-st.set_page_config(page_title='揽星辰', page_icon=None, layout="wide",
+st.set_page_config(page_title='同盟考勤工具', page_icon=None, layout="wide",
                    initial_sidebar_state="auto", menu_items=None)
 
 
