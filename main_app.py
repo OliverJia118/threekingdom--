@@ -19,6 +19,8 @@ elif password == 'gch':
     name = '观沧海'
 elif password == 'ljt':
     name = '落九天'
+elif password == 'guest':
+    name = '测试盟'
 elif password == '':
     st.warning('请输入密码')
     st.stop()
