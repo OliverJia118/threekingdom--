@@ -13,13 +13,7 @@ st.set_page_config(page_title='同盟考勤工具', page_icon=None, layout="wide
 
 
 password = st.sidebar.text_input('请输入密码', type='password')
-if password == 'lxc':
-    name = '揽星辰'
-elif password == 'gch':
-    name = '观沧海'
-elif password == 'ljt':
-    name = '落九天'
-elif password == 'guest':
+if password == 'guest':
     name = '测试盟'
 elif password == '':
     st.warning('请输入密码')
