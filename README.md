@@ -5,4 +5,4 @@ A Python + streamlit dashboard analyse the attendance of alliance members and we
 
 Any suggestion will be great~ 
 
-Password: lxc
+Password: guest
